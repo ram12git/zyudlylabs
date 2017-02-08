@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+
+# ########################################################################## #
+# INIT SECTION
+# ########################################################################## #
+require "pp"
+require "cmdparse"
+require File.join(File.dirname(__FILE__),"..","lib","zyudly_aws.rb")
+
+@verbose = false
+@region = 'us-west-2'
+@env = "dev"
+@zaws = nil
+
+# #### #
+# ec2 command and sub-commands
+# #### #
+ec2_cmd = CmdParse::Command.new("ec2")
+ec2_cmd.short_desc = "EC2 commands"
+ec2_cmd.takes_commands = true
+ec2_cmd.add_command("list", default: true) do |cmd|
+  cmd.short_desc("List EC2 instances")
+  cmd.takes_commands = false
+  cmd.action do
+    @zaws.ec2_list
+  end
+end
+
+
+# ########################################################################## #
+# MAIN SECTION
+# ########################################################################## #
+begin
+  # #### #
+  # Setup command-line parser object and parse options
+  # #### #
+  parser = CmdParse::CommandParser.new(handle_exceptions: :no_help)
+  parser.main_options.program_name = "#{$0}"
+  parser.main_options.banner = "Zyudly Devops Script"
+  parser.global_options do |opt|
+    opt.on("-v", "--verbose", "Be verbose i.e. not quiet") do
+      @verbose = true
+    end
+    opt.on("-r", "--region AWS REGION", "Set AWS REGIONS") do |r|
+      raise "Invalid region '#{r}'" unless r =~ /^us-(east|west)-(1|2)$/
+      @region = r
+    end
+    opt.on("-e", "--environment ENV", "One of: dev,stg,prd") do |e|
+      raise "Invalid env '#{e}'" unless e =~ /^(dev|stg|prd)$/
+      @env = e
+    end
+  end
+  parser.add_command(CmdParse::HelpCommand.new, default: false)
+  parser.add_command(ec2_cmd)
+  parser.parse do |level,command_name|
+    # #### #
+    # Set the global variables that will be used in the commands once
+    # #### #
+    if level == 0 then
+      @zaws = ZyudlyAWS.new(@region,@env)
+      @zaws.verbose = @verbose
+    end
+  end
+  exit 0
+rescue => e
+  puts e.to_s
+  exit 1
+end

@@ -1,0 +1,259 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "AWS Cloud Formation template to launch an EC2 Instance and a LoadBalancer",
+	"Parameters": {
+		"AvailabilityZone": {
+			"Description": "select the Availability Zone to launch the Instance",
+			"Type": "AWS::EC2::AvailabilityZone::Name"
+		},
+		"AvailabilityZone2": {
+			"Description": "select the Availability Zone to launch the Instance",
+			"Type": "AWS::EC2::AvailabilityZone::Name"
+		},
+		"EC2InstanceType": {
+			"Description": "Type of EC2 instance to launch.",
+			"Type": "String",
+			"Default": "t2.micro",
+			"AllowedValues": [
+				"cc2.8xlarge",
+				"c3.8xlarge",
+				"c3.4xlarge",
+				"c3.2xlarge",
+				"c3.xlarge",
+				"c3.large",
+				"c4.8xlarge",
+				"c4.4xlarge",
+				"c4.2xlarge",
+				"c4.xlarge",
+				"c4.large",
+				"r3.8xlarge",
+				"r3.4xlarge",
+				"r3.2xlarge",
+				"r3.xlarge",
+				"r3.large",
+				"i2.8xlarge",
+				"i2.4xlarge",
+				"i2.2xlarge",
+				"i2.xlarge",
+				"cr1.8xlarge",
+				"cg1.4xlarge",
+				"m3.medium",
+				"m3.large",
+				"m3.xlarge",
+				"m3.2xlarge",
+				"hi1.4xlarge",
+				"g2.2xlarge",
+				"t2.micro",
+				"t2.small",
+				"t2.medium",
+				"t2.large",
+				"t2.nano",
+				"d2.8xlarge",
+				"d2.4xlarge",
+				"d2.2xlarge",
+				"d2.xlarge",
+				"m4.large",
+				"m4.xlarge",
+				"m4.2xlarge",
+				"m4.4xlarge",
+				"m4.10xlarge"
+			],
+			"ConstraintDescription": "must be a valid EC2 instance type."
+		},
+
+		"EC2InstanceType2": {
+			"Description": "Type of EC2 instance to launch.",
+			"Type": "String",
+			"Default": "t2.micro",
+			"AllowedValues": [
+				"cc2.8xlarge",
+				"c3.8xlarge",
+				"c3.4xlarge",
+				"c3.2xlarge",
+				"c3.xlarge",
+				"c3.large",
+				"c4.8xlarge",
+				"c4.4xlarge",
+				"c4.2xlarge",
+				"c4.xlarge",
+				"c4.large",
+				"r3.8xlarge",
+				"r3.4xlarge",
+				"r3.2xlarge",
+				"r3.xlarge",
+				"r3.large",
+				"i2.8xlarge",
+				"i2.4xlarge",
+				"i2.2xlarge",
+				"i2.xlarge",
+				"cr1.8xlarge",
+				"cg1.4xlarge",
+				"m3.medium",
+				"m3.large",
+				"m3.xlarge",
+				"m3.2xlarge",
+				"hi1.4xlarge",
+				"g2.2xlarge",
+				"t2.micro",
+				"t2.small",
+				"t2.medium",
+				"t2.large",
+				"t2.nano",
+				"d2.8xlarge",
+				"d2.4xlarge",
+				"d2.2xlarge",
+				"d2.xlarge",
+				"m4.large",
+				"m4.xlarge",
+				"m4.2xlarge",
+				"m4.4xlarge",
+				"m4.10xlarge"
+			],
+			"ConstraintDescription": "must be a valid EC2 instance type."
+		},
+		"KeyPair": {
+			"Description": "Amazon EC2 Key Pair",
+			"Type": "AWS::EC2::KeyPair::KeyName"
+		},
+		"KeyPair2": {
+			"Description": "Amazon EC2 Key Pair",
+			"Type": "AWS::EC2::KeyPair::KeyName"
+		},
+		"EC2InstanceAMI": {
+			"Description": "Type the Instance AMI ID",
+			"Default": "ami-6d1c2007",
+			"Type": "String"
+		},
+		"EC2InstanceAMI2": {
+			"Description": "Type the Instance AMI ID",
+			"Default": "ami-6d1c2007",
+			"Type": "String"
+		},
+		"SubnetID": {
+			"Description": "Choose the SubnetID to attach with the EC2 Instance",
+			"Type": "AWS::EC2::Subnet::Id"
+		},
+		"SubnetID2": {
+			"Description": "Choose the SubnetID to attach with the EC2 Instance",
+			"Type": "AWS::EC2::Subnet::Id"
+		},
+
+		"SecurityGroupID": {
+			"Description": "Select the Security Group for EC2 Instance",
+			"Type": "AWS::EC2::SecurityGroup::Id"
+		},
+		"SecurityGroupID2": {
+			"Description": "Select the Security Group for EC2 Instance",
+			"Type": "AWS::EC2::SecurityGroup::Id"
+		}
+
+	},
+	"Resources": {
+		"Ec2Instance": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"AvailabilityZone": {
+					"Ref": "AvailabilityZone"
+				},
+				"InstanceType": {
+					"Ref": "EC2InstanceType"
+				},
+				"SubnetId": {
+					"Ref": "SubnetID"
+				},
+
+				"SecurityGroupIds": [{
+					"Ref": "SecurityGroupID"
+				}],
+				"ImageId": {
+					"Ref": "EC2InstanceAMI"
+				},
+				"KeyName": {
+					"Ref": "KeyPair"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Valora1"
+				}]
+			}
+		},
+
+		"Ec2Instance2": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"AvailabilityZone": {
+					"Ref": "AvailabilityZone2"
+				},
+				"InstanceType": {
+					"Ref": "EC2InstanceType2"
+				},
+				"SubnetId": {
+					"Ref": "SubnetID2"
+				},
+				"SecurityGroupIds": [{
+					"Ref": "SecurityGroupID2"
+				}],
+				"ImageId": {
+					"Ref": "EC2InstanceAMI2"
+				},
+				"KeyName": {
+					"Ref": "KeyPair2"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Valora2"
+				}]
+			}
+		},
+		"ElasticLoadBalancer": {
+			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+			"Properties": {
+				"Instances": [{
+					"Ref": "Ec2Instance"
+				}],
+				"Subnets": [{
+					"Ref": "SubnetID"
+				}],
+				"CrossZone": true,
+				"SecurityGroups": [{
+					"Ref": "SecurityGroupID"
+				}],
+				"LoadBalancerName": "ELB",
+				"Tags": [{
+					"Key": "Name",
+					"Value": "ELB-Valora"
+				}],
+				"Listeners": [{
+					"LoadBalancerPort": "80",
+					"InstancePort": "80",
+					"Protocol": "HTTP"
+				}],
+				"HealthCheck": {
+					"Target": "HTTP:80/",
+					"HealthyThreshold": "3",
+					"UnhealthyThreshold": "5",
+					"Interval": "30",
+					"Timeout": "5"
+				},
+				"ConnectionDrainingPolicy": {
+					"Enabled": "true",
+					"Timeout": "60"
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"EC2InstanceID": {
+			"Value": {
+				"Ref": "Ec2Instance"
+			},
+			"Description": "The Instance ID of the created Ec2 Instance"
+		},
+		"ELBDNS": {
+			"Value": {
+				"Fn::GetAtt": ["ElasticLoadBalancer", "DNSName"]
+			},
+			"Description": "The Public DNS of the created ELB"
+		}
+	}
+}
